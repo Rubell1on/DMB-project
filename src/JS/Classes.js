@@ -9,10 +9,6 @@ class Block {
         this.Hide();
     }
 
-    objectHandle = undefined;
-    titleHandle = undefined;
-    bodyHandle = undefined;
-
     _Create() {
         $(`.${this._parent}`).append(this._blockString);
         this.objectHandle = $(`.${this._parent} > div:last-child`);
