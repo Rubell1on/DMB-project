@@ -40,6 +40,7 @@ class Block {
 
 class Fields {
     constructor() {
+        this.isExpired = false;
         this.targetTime = moment('2020-12-05');
         this.fullDateHandle = $('.full-date');
         this.monthsHandle = new Block('wrapper', 'В месяцах', 'months', 1, 0);
@@ -52,34 +53,42 @@ class Fields {
     SetData() {
         const currentTime = moment();
         const parsed = this.getDateObject(currentTime.format('YYYY-MM-DDTHH:mm:ss'));
-        const fullDate = this.targetTime.clone().subtract(parsed).format('MM месяцев DD дней HH часов mm минут ss секунд');
-        const months = this.targetTime.diff(currentTime, 'months');
-        const days = this.targetTime.diff(currentTime, 'days');
-        const hours = this.targetTime.diff(currentTime, 'hours');
-        const minutes = this.targetTime.diff(currentTime, 'minutes');
-        const seconds = this.targetTime.diff(currentTime, 'seconds');
-    
-        this.fullDateHandle.html(fullDate);
-        this.monthsHandle.SetBody(months);
-        this.daysHandle.SetBody(days);
-        this.hoursHandle.SetBody(hours);
-        this.minutesHandle.SetBody(minutes);
-        this.secondsHandle.SetBody(seconds);
+        this.isExpired = this.targetTime.clone().diff(currentTime, 'd') <= 0 ? true : false;
+
+        if (!this.isExpired) {
+            const fullDate = this.targetTime.clone().subtract(parsed).format('MM месяцев DD дней HH часов mm минут ss секунд');
+            const months = this.targetTime.diff(currentTime, 'months');
+            const days = this.targetTime.diff(currentTime, 'days');
+            const hours = this.targetTime.diff(currentTime, 'hours');
+            const minutes = this.targetTime.diff(currentTime, 'minutes');
+            const seconds = this.targetTime.diff(currentTime, 'seconds');
+        
+            this.fullDateHandle.html(fullDate);
+            this.monthsHandle.SetBody(months);
+            this.daysHandle.SetBody(days);
+            this.hoursHandle.SetBody(hours);
+            this.minutesHandle.SetBody(minutes);
+            this.secondsHandle.SetBody(seconds);
+        } else {
+            this.fullDateHandle.html('ДМБ настал:D');
+        }
 
         return this;
     }
 
     ShowAll() {
-        const duration = 500;
-        this.monthsHandle.ShowAnimation(duration, () => {
-            this.daysHandle.ShowAnimation(duration, () => {
-                this.hoursHandle.ShowAnimation(duration, () => {
-                    this.minutesHandle.ShowAnimation(duration, () => {
-                        this.secondsHandle.ShowAnimation(duration, () => {});
+        if (!this.isExpired) {
+            const duration = 500;
+            this.monthsHandle.ShowAnimation(duration, () => {
+                this.daysHandle.ShowAnimation(duration, () => {
+                    this.hoursHandle.ShowAnimation(duration, () => {
+                        this.minutesHandle.ShowAnimation(duration, () => {
+                            this.secondsHandle.ShowAnimation(duration, () => {});
+                        });
                     });
                 });
             });
-        });
+        }
 
         return this;
     }
