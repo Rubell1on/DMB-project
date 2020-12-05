@@ -70,7 +70,7 @@ class Fields {
             this.minutesHandle.SetBody(minutes);
             this.secondsHandle.SetBody(seconds);
         } else {
-            this.fullDateHandle.html('ДМБ настал:D');
+            $('h1.main-title').html('ДМБ настал:D');
         }
 
         return this;
